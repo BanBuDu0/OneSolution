@@ -1,10 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}查询{% endblock %}
+
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h3>僵尸企业查询</h3>
+    </div>
+
+{#    <label>#}
+{#        <select name="select_input" onchange="test()">#}
+{#            {% for key, val in options %}#}
+{#                <option value= {{ key }}>{{ val }}</option>#}
+{#            {% endfor %}#}
+{#        </select>#}
+{#    </label>#}
+
+    <div>
+        {{ wtf.quick_form(form) }}
+    </div>
+
+    <script src="/static/test.js"></script>
+
+{% endblock %}

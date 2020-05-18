@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "bootstrap/base.html" %}
 
-</body>
-</html>
+
+{% block title %}Title{% endblock %}
+
+
+{% block content %}
+    <div class="container col-lg-3 col-lg-offset-4">
+        {% block page_content %}{% endblock %}
+    </div>
+{% endblock %}
