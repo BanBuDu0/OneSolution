@@ -1,10 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-</body>
-</html>
+{% block title %}查询结果{% endblock %}
+
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h3>查询结果</h3>
+    </div>
+
+    <table class="table">
+        <caption>僵尸企业分类结果</caption>
+        <thead>
+        <tr>
+            <th>企业ID</th>
+            <th>是否僵尸企业</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for key, value in row %}
+            <tr>
+                <th>{{ key }}</th>
+                <th>{{ value }}</th>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    <script src="/static/test.js"></script>
+
+{% endblock %}
