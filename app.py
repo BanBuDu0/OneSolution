@@ -37,15 +37,16 @@ def index():
             session['file_name'] = upload_file.filename
             upload_pd.to_csv(s, index=False)
             return redirect(url_for('res'))
-        except KeyError as e:
-            flash('Can not find index ' + e.__str__() + ' in CSV!')
+        except:
+            flash('Can not find column \'ID\' in CSV!')
     return render_template('index.html', form=form)
 
 
 @app.route('/res')
 def res():
-    res_path = "D://jupyter_project//OneSolution//data//base_verify1.csv"
-    res_file = pd.read_csv(res_path).fillna(0)
+    res_path = "D://jupyter_project//OneSolution//data//res.csv"
+    res_file = pd.read_csv(res_path, encoding='gbk')
+    res_file.columns = ['ID', 'TYPE']
     t = {}
     for i, row in res_file.iterrows():
         t[int(row['ID'])] = int(row['TYPE'])
