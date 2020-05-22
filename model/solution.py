@@ -25,8 +25,10 @@ train_knowledge = pd.read_csv("D:\\jupyter_project\\OneSolution\\data\\train\\kn
 train_money = pd.read_csv("D:\\jupyter_project\\OneSolution\\data\\train\\money_report_train_sum.csv", encoding="gbk")
 train_year = pd.read_csv("D:\\jupyter_project\\OneSolution\\data\\train\\year_report_train_sum.csv", encoding="gbk")
 verify_base = pd.read_csv("D:\\jupyter_project\\OneSolution\\data\\verify\\base_verify1.csv", encoding="gbk")
-verify_money = pd.read_csv("D:\\jupyter_project\\OneSolution\\data\\verify\\money_information_verify1.csv", encoding="gbk")
-verify_knowledge = pd.read_csv("D:\\jupyter_project\\OneSolution\\data\\verify\\paient_information_verify1.csv", encoding="gbk")
+verify_money = pd.read_csv("D:\\jupyter_project\\OneSolution\\data\\verify\\money_information_verify1.csv",
+                           encoding="gbk")
+verify_knowledge = pd.read_csv("D:\\jupyter_project\\OneSolution\\data\\verify\\paient_information_verify1.csv",
+                               encoding="gbk")
 verify_year = pd.read_csv("D:\\jupyter_project\\OneSolution\\data\\verify\\year_report_verify1.csv", encoding="gbk")
 test_base = pd.read_csv("D:\\jupyter_project\\OneSolution\\data\\test\\base_test_sum.csv", encoding="gbk")
 test_money = pd.read_csv("D:\\jupyter_project\\OneSolution\\data\\test\\money_report_test_sum.csv", encoding="gbk")
@@ -172,17 +174,23 @@ if __name__ == '__main__':
     test_t1 = pca.transform(X_test_m)
 
     # use gridSearch to find the best param of SVM
-    print('--------> GridSearch Process')
-    param_grid = {'C': [0.1, 1, 10, 100], 'kernel': ['linear', 'poly', 'rbf', 'sigmoid'], 'gamma': ['scale', 'auto']}
-    clf = GridSearchCV(svm.SVC(degree=5, max_iter=10000), cv=3, param_grid=param_grid, refit=True, )
+    # print('--------> GridSearch Process')
+    # param_grid = {'C': [0.1, 1, 10, 100], 'kernel': ['linear', 'poly', 'rbf', 'sigmoid'], 'gamma': ['scale', 'auto']}
+    # clf = GridSearchCV(svm.SVC(degree=5, max_iter=10000), cv=3, param_grid=param_grid, refit=True, )
+    #
+    # clf.fit(X_train_pca, Y_train)
+    # predict = clf.predict(X_verify_pca)
+    #
+    # best_parameters = clf.best_estimator_.get_params()
+    # print('--------> Best Parameter of SVM')
+    # for para, val in list(best_parameters.items()):
+    #     print(para, val)
 
+    clf = svm.SVC(degree=5, max_iter=10000, C=0.1, cache_size=200, class_weight=None, coef0=0.0,
+                  decision_function_shape='ovr', gamma='scale',
+                  kernel='linear', probability=False, random_state=None, shrinking=True, tol=0.001, verbose=False)
     clf.fit(X_train_pca, Y_train)
     predict = clf.predict(X_verify_pca)
-
-    best_parameters = clf.best_estimator_.get_params()
-    print('--------> Best Parameter of SVM')
-    for para, val in list(best_parameters.items()):
-        print(para, val)
 
     accuracy_rate = metrics.accuracy_score(Y_verify, predict)
     # show the verify accuracy
@@ -196,5 +204,5 @@ if __name__ == '__main__':
     id_column = X_test[:, 0].astype('int')
     res_df = pd.DataFrame(res, id_column).reset_index()
     res_df.columns = ['企业ID', '分类结果']
-    res_df.to_csv('D:\\jupyter_project\\OneSolution\\data\\result.csv', index=False, encoding='utf_8_sig')
+    # res_df.to_csv('D:\\jupyter_project\\OneSolution\\data\\result.csv', index=False, encoding='utf_8_sig')
     print('--------> Write Result Success')

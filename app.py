@@ -53,13 +53,13 @@ def index():
             session['method'] = 1
             return redirect(url_for('res'))
         except:
-            flash('Not correct single integer ID')
+            flash('Incorrect single integer ID')
     return render_template('index.html', text_form=text_form, file_form=file_form)
 
 
 @app.route('/res')
 def res():
-    res_path = "D://jupyter_project//OneSolution//data//res.csv"
+    res_path = "D://jupyter_project//OneSolution//data//result.csv"
     res_file = pd.read_csv(res_path, encoding='gbk')
     res_file.columns = ['ID', 'TYPE']
     t = {}
