@@ -66,9 +66,9 @@ def res():
     for i, row in res_file.iterrows():
         t[int(row['ID'])] = int(row['TYPE'])
     r = []
-    s = os.getcwd() + "//upload//" + session.get('file_name')
     _method = session.get('method')
     if _method == 0:
+        s = os.getcwd() + "//upload//" + session.get('file_name')
         uploaded_file = pd.read_csv(s)
         uploaded_file_numpy = uploaded_file.to_numpy()
         for i in uploaded_file_numpy:
