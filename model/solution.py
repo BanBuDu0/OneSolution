@@ -77,6 +77,7 @@ def merge_money_year_mean():
 
 
 if __name__ == '__main__':
+    print('--------> Data Preprocess')
     train_base_knowledge, verify_base_knowledge, test_base_knowledge = merge_base_knowledge()
     train_mean, verify_mean, test_mean = merge_money_year_mean()
 
@@ -112,6 +113,7 @@ if __name__ == '__main__':
     df_verify.dropna(inplace=True)
 
     # deal with chinese data
+    print('--------> Handling Chinese Data Problems')
     encoder = OneHotEncoder(sparse=False)
     X_train = df_train.to_numpy()
     X_verify = df_verify.to_numpy()
@@ -143,6 +145,7 @@ if __name__ == '__main__':
     X_test = np.hstack((X_test, ans_test)).astype('float32')
 
     # because the train data do not have all label,so need do clustering first
+    print('--------> Clustering on Training Data')
     km = KMeans(n_clusters=2, random_state=0)
     km.fit(X_train)
     for i in range(len(km.labels_)):
@@ -152,6 +155,7 @@ if __name__ == '__main__':
             Y_train[i] = 1
 
     # do min max scaler
+    print('--------> MinMaxScaler Process')
     X_train_m = MinMaxScaler().fit_transform(X_train)
     X_verify_m = MinMaxScaler().fit_transform(X_verify)
     X_test_m = MinMaxScaler().fit_transform(X_test)
@@ -160,6 +164,7 @@ if __name__ == '__main__':
     Y_verify = Y_verify.astype('int')
 
     # do pca to find the important feature
+    print('--------> PCA Process')
     pca = PCA(n_components=10)
     pca.fit(X_train_m)
     X_train_pca = pca.transform(X_train_m)
@@ -167,21 +172,29 @@ if __name__ == '__main__':
     test_t1 = pca.transform(X_test_m)
 
     # use gridSearch to find the best param of SVM
+    print('--------> GridSearch Process')
     param_grid = {'C': [0.1, 1, 10, 100], 'kernel': ['linear', 'poly', 'rbf', 'sigmoid'], 'gamma': ['scale', 'auto']}
     clf = GridSearchCV(svm.SVC(degree=5, max_iter=10000), cv=3, param_grid=param_grid, refit=True, )
 
     clf.fit(X_train_pca, Y_train)
     predict = clf.predict(X_verify_pca)
+
+    best_parameters = clf.best_estimator_.get_params()
+    print('--------> Best Parameter of SVM')
+    for para, val in list(best_parameters.items()):
+        print(para, val)
+
     accuracy_rate = metrics.accuracy_score(Y_verify, predict)
     # show the verify accuracy
-    print('verify accuracy: %s' % accuracy_rate)
+    print('--------> Verify Accuracy: %s' % accuracy_rate)
 
     # predict test label
+    print('--------> Predict Test Data')
     res = clf.predict(test_t1)
 
     # write csv
     id_column = X_test[:, 0].astype('int')
     res_df = pd.DataFrame(res, id_column).reset_index()
     res_df.columns = ['企业ID', '分类结果']
-    res_df.to_csv('D:\\jupyter_project\\OneSolution\\data\\res.csv', index=False, encoding='utf_8_sig')
-    print('write csv success!')
+    res_df.to_csv('D:\\jupyter_project\\OneSolution\\data\\result.csv', index=False, encoding='utf_8_sig')
+    print('--------> Write Result Success')
