@@ -183,6 +183,5 @@ if __name__ == '__main__':
     id_column = X_test[:, 0].astype('int')
     res_df = pd.DataFrame(res, id_column).reset_index()
     res_df.columns = ['企业ID', '分类结果']
-    # res_df.to_csv('./data/res1.csv')
-    res_df.to_csv('D:\\jupyter_project\\OneSolution\\data\\res.csv')
+    res_df.to_csv('D:\\jupyter_project\\OneSolution\\data\\res.csv', index=False, encoding='utf_8_sig')
     print('write csv success!')

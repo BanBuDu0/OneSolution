@@ -14,14 +14,6 @@ app.config['UPLOAD_FOLDER'] = '//upload//'
 bootstrap = Bootstrap(app)
 
 
-def validate_answer(form, field):
-    s = pd.read_csv(field.data).columns
-    print("ok")
-    if len(s) != 1 or s[0] != 'ID':
-        print("ok2")
-        raise ValidationError('Can not find column \'ID\' in CSV!')
-
-
 class TextForm(FlaskForm):
     content = StringField('单个查询输入',
                           validators=[DataRequired()]
@@ -32,7 +24,6 @@ class TextForm(FlaskForm):
 class FileForm(FlaskForm):
     file = FileField('上传文件查询', validators=[
         FileRequired(),
-        validate_answer,
         FileAllowed(['csv'], '只接收csv文件')
     ])
 
@@ -44,15 +35,17 @@ def index():
     text_form = TextForm()
     file_form = FileForm()
     if file_form.validate_on_submit():
-        upload_file = file_form.file.data
-        upload_pd = pd.read_csv(upload_file)['ID']
-        s = os.getcwd() + app.config['UPLOAD_FOLDER'] + upload_file.filename
-        print(s)
-        session['file_name'] = upload_file.filename
-        session['method'] = 0
-        upload_pd.to_csv(s, index=False)
-        return redirect(url_for('res'))
-
+        try:
+            upload_file = file_form.file.data
+            upload_pd = pd.read_csv(upload_file)['ID']
+            s = os.getcwd() + app.config['UPLOAD_FOLDER'] + upload_file.filename
+            print(s)
+            session['file_name'] = upload_file.filename
+            session['method'] = 0
+            upload_pd.to_csv(s, index=False)
+            return redirect(url_for('res'))
+        except:
+            flash('Can not find column \'ID\' in CSV!')
     elif text_form.validate_on_submit():
         _input = text_form.content.data
         try:
