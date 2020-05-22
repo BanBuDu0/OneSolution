@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from flask_wtf.file import FileRequired, FileAllowed
 from wtforms import StringField, SubmitField, FileField
-from wtforms.validators import DataRequired, StopValidation
+from wtforms.validators import DataRequired, ValidationError
 import pandas as pd
 import os
 
@@ -19,9 +19,7 @@ def validate_answer(form, field):
     print("ok")
     if len(s) != 1 or s[0] != 'ID':
         print("ok2")
-        raise StopValidation(field.gettext(
-            'Can not find column \'ID\' in CSV!'
-        ))
+        raise ValidationError('Can not find column \'ID\' in CSV!')
 
 
 class TextForm(FlaskForm):
