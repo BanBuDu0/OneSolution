@@ -10,8 +10,10 @@
         <h3>僵尸企业查询</h3>
     </div>
 
+
+
     {#    <label>#}
-    {#        <select name="select_input" onchange="test()">#}
+    {#        <select name="select_input" onchange="test()" class="selectpicker">#}
     {#            {% for key, val in options %}#}
     {#                <option value= {{ key }}>{{ val }}</option>#}
     {#            {% endfor %}#}
@@ -19,9 +21,15 @@
     {#    </label>#}
 
 
-    <div>
-        {{ wtf.quick_form(form) }}
-    </div>
+    <label>
+        <!-- 样式1 -->
+        <select class="form-control" onchange="test()" id="my_select">
+            <option>单个输入查询</option>
+            <option>上传文件查询</option>
+        </select>
+    </label>
+
+    <br><br>
 
     {% for message in get_flashed_messages() %}
         <div class="alert alert-warning">
@@ -30,6 +38,31 @@
         </div>
     {% endfor %}
 
-    <script src="/static/test.js"></script>
+    <div id="text_form">
+        {{ wtf.quick_form(text_form) }}
+    </div>
+
+    <div id="file_form" style="display: none">
+        {{ wtf.quick_form(file_form) }}
+    </div>
+
+
+
+    <script>
+        function test() {
+            let sel = document.getElementById("my_select");
+            let te = document.getElementById("text_form");
+            let fi = document.getElementById('file_form');
+            console.log(sel.selectedIndex)
+            if (sel.selectedIndex === 0) {
+                te.style.display = "inline";
+                fi.style.display = "none";
+            } else {
+                te.style.display = "none";
+                fi.style.display = "inline";
+            }
+        }
+    </script>
+
 
 {% endblock %}
